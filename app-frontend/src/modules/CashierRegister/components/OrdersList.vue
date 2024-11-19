@@ -1,0 +1,128 @@
+<template>
+  <div>
+    <q-scroll-area style="height: 250px; max-width: 100%;" ref="scrollAreaRef">
+      <q-list bordered separator>
+        <q-item class="bg-mor text-white fw-bold">
+          <q-item-section>
+            <div>CANT.</div>
+          </q-item-section>
+          <q-item-section>
+            <div>ITEM</div>
+          </q-item-section>
+          <q-item-section class="text-right">
+            <div>COSTO</div>
+          </q-item-section>
+          <q-item-section class="text-right">
+            <div>ACCIÓN</div>
+          </q-item-section>
+        </q-item>
+
+        <q-item
+          v-for="(item, index) in items"
+          :key="item.id"
+          clickable
+          v-ripple
+          :active="index === activeIndex"
+          :class="{ 'bg-green-1': index === activeIndex }"
+          @click="activeIndex = index"
+        >
+          <q-item-section>
+            <q-item-label>{{item.quantity}}</q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label class="fw-bold">{{item.label}}</q-item-label>
+<!--            <q-item-label caption class="font-size-10">{{item.description}}</q-item-label>-->
+          </q-item-section>
+          <q-item-section class="text-right">
+            <q-item-label >$ {{item.price}}</q-item-label>
+          </q-item-section >
+          <q-item-section class="text-right">
+            <q-item-label >
+              <q-btn
+                color="red"
+                icon-right="delete"
+                size="sm"
+                @click="deleteItem(item.id)"
+              >
+                <q-tooltip>Eliminar</q-tooltip>
+              </q-btn>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          v-if="loading"
+        >
+          <q-item-section >
+            <div class="q-pa-md">
+              <div class="q-gutter-md row justify-center">
+                <q-spinner
+                  color="primary"
+                  size="3em"
+                />
+              </div>
+            </div>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-scroll-area>
+    <div class="row bg-mor q-pa-md">
+      <div class="col flex justify-between">
+        <div class="text-white">#Cta: C2.14576</div>
+        <div class="text-white">#Folio: F2.15683</div>
+      </div>
+    </div>
+    <div class="row bg-dark q-pa-md border-babylon-top">
+      <div class="col flex justify-between">
+        <div class="text-primary font-size-20 fw-bold">Total a pagar: </div>
+        <div class="text-primary font-size-20 fw-bold">$ {{props.total}}</div>
+      </div>
+    </div>
+    <div class="row bg-dark q-pa-md border-babylon-top">
+      <div class="col flex justify-between">
+        <q-btn color="negative" label="Cancelar" @click="resetCart" class="fw-bold" />
+        <q-btn color="accent" text-color="dark" label="Confirmar" @click="handleConfirm" class="fw-bold" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+
+import {ref} from "vue";
+
+const props = defineProps({
+  items: Object,
+  total: Number
+});
+
+const emit = defineEmits([
+  'delete',
+  'reset',
+  'confirm'
+]);
+
+const loading = ref(false);
+const activeIndex = ref(0);
+const scrollAreaRef = ref(null);
+
+
+const deleteItem = (index) => {
+  emit('delete', index);
+};
+
+const resetCart = () => {
+  emit('reset');
+};
+
+const handleConfirm = () => {
+  emit('confirm');
+}
+
+</script>
+
+<style scoped>
+.bg-green-1{
+  background-color: #9AFF6E;
+  color: #121212;
+}
+</style>

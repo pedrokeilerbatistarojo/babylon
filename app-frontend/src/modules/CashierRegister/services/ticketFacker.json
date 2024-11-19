@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "label": "Niño",
+    "description": "Aplica para menores de 18 años.",
+    "price": 100
+  },
+  {
+    "id": 2,
+    "label": "Adulto",
+    "description": "Aplica para cualquier persona mayor de 18 años.",
+    "price": 100
+  },
+  {
+    "id": 3,
+    "label": "Adulto + Niño",
+    "description": "Aplica para niños que requieran la asistencia de un adulto.",
+    "price": 100
+  },
+  {
+    "id": 4,
+    "label": "Adulto 2 x 1",
+    "description": "Promoción 2 x 1 para adultos después de un pedido.",
+    "price": 100
+  }
+]

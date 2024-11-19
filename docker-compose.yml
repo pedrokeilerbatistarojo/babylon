@@ -1,0 +1,83 @@
+#Marvel Proyect
+
+#version: '3.7'
+
+volumes:
+    logs:
+        driver: local
+
+services:
+
+    db-server:
+        image: mysql:8.4.0
+        restart: unless-stopped
+        command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION']
+        mem_limit: 1024m
+        mem_reservation: 512M
+        env_file:
+            - db-server.env
+        ports:
+            - 3306:3306
+        volumes:
+            - ./docker/mysql/data:/var/lib/mysql
+            - ./docker/mysql/sql:/docker-entrypoint-initdb.d
+        networks:
+            - marvel-net
+        healthcheck:
+            test: mysql -h localhost -u root -e 'SELECT version();'
+            start_period: 5s
+            interval: 15s
+            timeout: 5s
+            retries: 5
+
+    redis:
+        image: redis:7.2.5-alpine
+        #command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
+        restart: unless-stopped
+        # ports:
+            # - "6379:6379"
+        networks:
+            - marvel-net
+
+    app-backend:
+        image: php:8.2.24-fpm
+        mem_limit: 1024m
+        mem_reservation: 512M
+        build:
+            context: ./docker/app-backend/
+            dockerfile: dockerfile
+        restart: unless-stopped
+        working_dir: /var/www
+        environment:
+            docker: "true"
+            REDIS_HOST: redis
+        volumes:
+            - ./app-backend:/var/www
+            - ./docker/app-backend/laravel-workers.conf:/etc/supervisor/conf.d/laravel-workers.conf
+        networks:
+            - marvel-net
+        depends_on:
+            - redis
+            - db-server
+        ports:
+            - 9001:9001
+
+    nginx:
+        image: nginx:1.27.2-alpine
+        build:
+            context: ./docker/nginx/
+            dockerfile: dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./app-backend:/var/www/
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - 80:80
+        networks:
+            - marvel-net
+        depends_on:
+            - app-backend
+
+networks:
+    marvel-net:
+    
