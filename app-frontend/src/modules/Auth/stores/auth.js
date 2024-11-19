@@ -46,21 +46,27 @@ export const useAuthStore = defineStore('auth', {
     async logout() {
       this.token = null;
       this.user = null;
-      SettingStorage.remove('token');
-      //localStorage.removeItem('token');
-      location.reload();
-    },
-
-    async fetchProfile() {
       await api
-        .post('/api/auth/me?includes=defaultCompany')
-        .then((response) => (this.user = response.data.data))
+        .post('/api/auth/logout')
+        .then(() => {
+        })
         .catch((error) => {
           this.error = error;
-          if (error.response.status === 422) {
-            this.validationsErrors = error.response.data.data;
-          }
         });
+
+      SettingStorage.remove('token');
     },
+
+    // async fetchProfile() {
+    //   await api
+    //     .post('/api/auth/me?includes=defaultCompany')
+    //     .then((response) => (this.user = response.data.data))
+    //     .catch((error) => {
+    //       this.error = error;
+    //       if (error.response.status === 422) {
+    //         this.validationsErrors = error.response.data.data;
+    //       }
+    //     });
+    // },
   },
 });

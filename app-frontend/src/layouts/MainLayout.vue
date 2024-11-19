@@ -43,6 +43,8 @@
             color="red"
             icon-right="logout"
             flat
+            clickable
+            @click="handleLogout"
           />
         </div>
       </q-toolbar>
@@ -51,7 +53,7 @@
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
-      class="bg-dark q-drawer-bordered text-white"
+      class="bg-dark q-drawer-bordered text-white shadow-20"
     >
       <q-list>
         <q-item-label
@@ -63,7 +65,6 @@
             style="width: 180px; height: 40px"
           >
         </q-item-label>
-        <div class="border-babylon-top"></div>
         <EssentialLink
           v-for="link in linksList"
           :key="link.title"
@@ -73,6 +74,7 @@
         <q-item
           class="q-pa-md"
           clickable
+          @click="handleLogout"
         >
           <q-item-section
             avatar
@@ -98,12 +100,18 @@
 import { ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import {useQuasar} from "quasar";
-
+import {useAuthStore} from "src/modules/Auth/stores/auth";
+import {storeToRefs} from "pinia";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const $q = useQuasar();
 
 defineOptions({
   name: 'MainLayout'
-})
+});
+
+const { error } = storeToRefs(useAuthStore());
+const { logout } = useAuthStore();
 
 const linksList = [
   {
@@ -126,9 +134,15 @@ const linksList = [
   },
 ]
 
-const leftDrawerOpen = ref(false)
+const leftDrawerOpen = ref(false);
 
-function toggleLeftDrawer () {
+const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+const handleLogout = () => {
+  logout();
+  router.push({ path: '/login' });
+}
+
 </script>

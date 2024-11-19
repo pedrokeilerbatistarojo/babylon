@@ -19,11 +19,12 @@ body{
 }
 
 .q-drawer-bordered {
-  border-right: 2px solid $border-color!important;
+  border-right: 1px solid $border-color!important;
 }
 
 .border-babylon-bottom{
-  border-bottom: 3px solid $border-color!important;
+  border-bottom: 0;
+  padding: 5px 0;
 }
 
 .border-babylon-top{

@@ -2,6 +2,9 @@ const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
+    meta: {
+      requiresAuth: true,
+    },
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       {
@@ -9,7 +12,7 @@ const routes = [
         path: '/cashier-register',
         component: () => import('../modules/CashierRegister/pages/IndexPage.vue'),
         meta: {
-          requiresAuth: false
+          requiresAuth: true
         },
       },
       {
@@ -17,7 +20,7 @@ const routes = [
         path: '/cash-management',
         component: () => import('../modules/CashManagement/pages/IndexPage.vue'),
         meta: {
-          requiresAuth: false
+          requiresAuth: true
         },
       },
       {
@@ -25,10 +28,15 @@ const routes = [
         path: '/transfers',
         component: () => import('../modules/Transfers/pages/IndexPage.vue'),
         meta: {
-          requiresAuth: false
+          requiresAuth: true
         },
       },
     ]
+  },
+  {
+    name: 'login',
+    path: '/login',
+    component: () => import('../modules/Auth/pages/LoginPage.vue'),
   },
 
   // Always leave this as last one,
