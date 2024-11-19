@@ -1,4 +1,4 @@
-#Marvel Proyect
+#Babylon Project
 
 #version: '3.7'
 
@@ -22,7 +22,7 @@ services:
             - ./docker/mysql/data:/var/lib/mysql
             - ./docker/mysql/sql:/docker-entrypoint-initdb.d
         networks:
-            - marvel-net
+            - babylon-net
         healthcheck:
             test: mysql -h localhost -u root -e 'SELECT version();'
             start_period: 5s
@@ -34,10 +34,10 @@ services:
         image: redis:7.2.5-alpine
         #command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
         restart: unless-stopped
-        # ports:
-            # - "6379:6379"
+        ports:
+            - "6379:6379"
         networks:
-            - marvel-net
+            - babylon-net
 
     app-backend:
         image: php:8.2.24-fpm
@@ -55,7 +55,7 @@ services:
             - ./app-backend:/var/www
             - ./docker/app-backend/laravel-workers.conf:/etc/supervisor/conf.d/laravel-workers.conf
         networks:
-            - marvel-net
+            - babylon-net
         depends_on:
             - redis
             - db-server
@@ -74,10 +74,10 @@ services:
         ports:
             - 80:80
         networks:
-            - marvel-net
+            - babylon-net
         depends_on:
             - app-backend
 
 networks:
-    marvel-net:
+    babylon-net:
     
