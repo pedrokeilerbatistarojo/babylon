@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Modules\Products\Domain\Seeders\ProductSeeder;
 use App\Modules\Users\Domain\Models\User;
 use App\Modules\Users\Infrastructure\Seeders\RoleSeeder;
 use App\Modules\Users\Infrastructure\Seeders\UserSeeder;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $seeders = [
             RoleSeeder::class,
             UserSeeder::class,
+            ProductSeeder::class,
         ];
 
         $this->call($seeders);

@@ -16,10 +16,11 @@
 
         <q-toolbar-title>
           <img
+            class="logo-header"
             v-if="!leftDrawerOpen && !$q.screen.lt.sm"
             alt="Babylon logo"
             src="~assets/logo.png"
-            style="width: 180px; height: 40px"
+            @click="toHome"
           >
         </q-toolbar-title>
 
@@ -36,15 +37,7 @@
             color="accent"
             icon-right="person"
             flat
-            label="Cajero 1"
-          />
-          <q-btn
-            class="fw-bold font-size-12"
-            color="red"
-            icon-right="logout"
-            flat
-            clickable
-            @click="handleLogout"
+            :label="userName"
           />
         </div>
       </q-toolbar>
@@ -59,11 +52,12 @@
         <q-item-label
           header
         >
-          <img
+          <q-img
+            class="logo-header"
             alt="Babylon logo"
             src="~assets/logo.png"
-            style="width: 180px; height: 40px"
-          >
+            @click="toHome"
+          />
         </q-item-label>
         <EssentialLink
           v-for="link in linksList"
@@ -97,12 +91,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import {useQuasar} from "quasar";
 import {useAuthStore} from "src/modules/Auth/stores/auth";
 import {storeToRefs} from "pinia";
 import { useRouter } from 'vue-router';
+import AuthService from "src/modules/Auth/services/AuthService";
 const router = useRouter();
 const $q = useQuasar();
 
@@ -112,6 +107,8 @@ defineOptions({
 
 const { error } = storeToRefs(useAuthStore());
 const { logout } = useAuthStore();
+
+const userName = computed(() => AuthService.getUserName())
 
 const linksList = [
   {
@@ -140,9 +137,29 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
 
+const toHome = () => {
+  router.push({ path: '/' });
+}
+
 const handleLogout = () => {
   logout();
   router.push({ path: '/login' });
 }
 
 </script>
+
+<style scoped>
+.logo-header{
+  width: 180px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.logo-header :hover{
+  width: 180px;
+  height: 45px!important;
+  cursor: pointer;
+  box-shadow: 0 6px 6px -3px #0003, 0 10px 14px 1px #00000024, 0 4px 18px 3px #0000001f!important;
+}
+
+</style>

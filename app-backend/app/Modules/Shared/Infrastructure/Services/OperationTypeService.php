@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Shared\Infrastructure\Services;
+namespace App\Modules\Shared\Infrastructure\Services;
 
-use App\Shared\Domain\Enums\OperationTypeEnum;
+use App\Modules\Shared\Domain\Enums\OperationTypeEnum;
 
 class OperationTypeService
 {

@@ -20,12 +20,10 @@
           <q-tab-panels v-model="tab" animated>
 
             <q-tab-panel name="management">
-              <div class="text-h6 fw-bold">Reporte de arqueo</div>
               <ManagementReport />
             </q-tab-panel>
 
             <q-tab-panel name="sales">
-              <div class="text-h6 fw-bold">Reporte de ventas</div>
               <ManagementReport />
             </q-tab-panel>
           </q-tab-panels>

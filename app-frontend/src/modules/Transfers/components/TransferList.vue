@@ -1,7 +1,7 @@
 <template>
-  <div class="q-mt-md">
-    <div class="q-pa-md bg-mor flex justify-between">
-      <div class="text-h6 fw-bold text-accent">Transferencias</div>
+  <div>
+    <div class="q-px-md q-py-sm bg-mor flex justify-between items-center">
+      <div class="text-uppercase fw-bold text-accent">Transferencias</div>
       <q-btn
         class="fw-bold"
         text-color="dark"

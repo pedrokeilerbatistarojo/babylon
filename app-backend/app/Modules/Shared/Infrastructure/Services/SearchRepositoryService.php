@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Shared\Infrastructure\Services;
+namespace App\Modules\Shared\Infrastructure\Services;
 
-use App\Shared\Domain\Criteria\CriteriaInterface;
-use App\Shared\Domain\Enums\SQLSortEnum;
+use App\Modules\Shared\Domain\Criteria\CriteriaInterface;
+use App\Modules\Shared\Domain\Enums\SQLSortEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchRepositoryService

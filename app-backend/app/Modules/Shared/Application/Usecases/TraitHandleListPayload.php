@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shared\Application\Usecases;
 
-use App\Shared\Domain\Dtos\SearchRequest;
+use App\Modules\Shared\Domain\Dtos\SearchRequest;
 
 trait TraitHandleListPayload
 {

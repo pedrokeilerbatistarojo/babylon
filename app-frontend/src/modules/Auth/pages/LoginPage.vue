@@ -51,6 +51,7 @@
 
         <div class="row justify-end q-mt-sm q-mb-md" v-if="!loading">
           <q-btn
+            size="lg"
             color="accent"
             text-color="dark"
             class="text-capitalize full-width fw-bold"

@@ -11,7 +11,7 @@
             active-color="accent"
             indicator-color="accent"
           >
-            <q-tab class="fw-bold" name="select" label="Seleccionar Ticket" />
+            <q-tab class="fw-bold" name="select" label="Seleccionar Producto" />
             <q-tab class="fw-bold" name="courtesy" label="Cortesías" />
           </q-tabs>
 
@@ -20,14 +20,16 @@
           <q-tab-panels v-model="tabTicker" animated>
 
             <q-tab-panel name="select">
-              <OrdersSelect
-                @add-ticket="handleAddTicket"
+              <ProductSelect
+                @add-product="handleAddProduct"
               />
             </q-tab-panel>
 
             <q-tab-panel name="courtesy">
-              <div class="text-h6">Última cuenta</div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              <ProductSelect
+                courtesy
+                @add-product="handleAddProduct"
+              />
             </q-tab-panel>
           </q-tab-panels>
         </q-card>
@@ -54,6 +56,7 @@
               <OrdersList
                 :items="cart"
                 :total="total"
+                @confirm="handlePaymentDialog"
                 @delete="handleDelete"
                 @reset="handleReset"
               />
@@ -67,6 +70,13 @@
         </q-card>
       </div>
     </div>
+
+    <CashierPaymentDialog
+      v-model="cashierPaymentDialogShow"
+      :cart="cart"
+      @success="handleCashierDialogSuccess"
+      @cancel="handleCashierDialogCancel"
+    />
   </q-page>
 </template>
 
@@ -75,37 +85,40 @@
 import OrdersList from "src/modules/CashierRegister/components/OrdersList.vue";
 
 import {computed, ref} from "vue";
-import OrdersSelect from "src/modules/CashierRegister/components/OrdersSelect.vue";
-import ticketsData from "src/modules/CashierRegister/services/ticketFacker.json";
-import { Notify, useQuasar} from "quasar";
+import ProductSelect from "src/modules/CashierRegister/components/ProductSelect.vue";
 import CartItem from "src/modules/CashierRegister/models/CartItem";
-
-const $q = useQuasar();
+import {storeToRefs} from "pinia";
+import {useProductStore} from "src/modules/CashierRegister/stores/product";
+import CashierPaymentDialog from "src/modules/CashierRegister/components/CashierPaymentDialog.vue";
+import TransferCashierDialog from "src/modules/Transfers/components/TransferCashierDialog.vue";
+import CashierService from "src/modules/CashierRegister/services/CashierService";
 
 defineOptions({
   name: 'IndexPage'
 });
 
+const { products, error } = storeToRefs(useProductStore());
 
 const tabOrder = ref('orders');
 const tabTicker = ref('select');
 
-const tickets = ref(ticketsData);
+const cashierPaymentDialogShow = ref(false);
 const cart = ref([]);
 
-const total = computed(() => {
-  return cart.value.reduce((sum, item) => sum + item.subtotal, 0);
-});
+const total = computed(() => CashierService.getCashierCartTotal(cart.value));
 
-const handleAddTicket = (ticketId) => {
-  const ticket = tickets.value.find(t => t.id === ticketId);
-  if (!ticket) return;
+const handleAddProduct = (data) => {
+  const product = products.value.find(t => t.id === data.productId);
+  if (!product) return;
 
-  const existingItem = cart.value.find(item => item.id === ticketId);
+  const courtesy = data.courtesy;
+  product.price = courtesy ? 0 : product.price;
+
+  const existingItem = cart.value.find(item => item.id === data.productId);
   if (existingItem) {
     existingItem.increment();
   } else {
-    const newItem = new CartItem(ticket.id, ticket.label, ticket.price);
+    const newItem = new CartItem(product.id, product.name, product.price);
     cart.value.push(newItem);
   }
 }
@@ -116,6 +129,18 @@ const handleReset = () => {
 
 const handleDelete = (id) => {
     cart.value = cart.value.filter(item => item.id !== id);
-
 }
+
+const handleCashierDialogSuccess = () => {
+  console.log('success');
+}
+
+const handlePaymentDialog = () => {
+  cashierPaymentDialogShow.value = true;
+}
+
+const handleCashierDialogCancel = () => {
+  cashierPaymentDialogShow.value = false;
+}
+
 </script>

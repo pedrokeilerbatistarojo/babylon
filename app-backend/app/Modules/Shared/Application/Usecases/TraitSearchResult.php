@@ -2,13 +2,13 @@
 
 namespace App\Modules\Shared\Application\Usecases;
 
-use App\Shared\Domain\Criteria\FieldCriteriaFactory;
-use App\Shared\Domain\Dtos\SearchRequest;
-use App\Shared\Domain\Enums\OperationTypeEnum;
-use App\Shared\Domain\Enums\PaginationParamsEnum;
-use App\Shared\Domain\Enums\SQLSortEnum;
-use App\Shared\Infrastructure\Services\OperationTypeService;
-use App\Shared\Infrastructure\Services\SearchRepositoryService;
+use App\Modules\Shared\Domain\Criteria\FieldCriteriaFactory;
+use App\Modules\Shared\Domain\Dtos\SearchRequest;
+use App\Modules\Shared\Domain\Enums\OperationTypeEnum;
+use App\Modules\Shared\Domain\Enums\PaginationParamsEnum;
+use App\Modules\Shared\Domain\Enums\SQLSortEnum;
+use App\Modules\Shared\Infrastructure\Services\OperationTypeService;
+use App\Modules\Shared\Infrastructure\Services\SearchRepositoryService;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 trait TraitSearchResult
@@ -65,26 +65,10 @@ trait TraitSearchResult
             $joins = $this->joins;
         }
 
-        $includes = $includes + $this->withLoading;
         $query = SearchRepositoryService::applySearchParams(
             $query, $criteria, $columns, $includes,
             $sortField, $sortType, $joins
         );
-
-        if (isset($this->functions)) {
-            foreach ($this->functions as $entry) {
-                [$fn, $field, $operator, $value] = $entry;
-                if ($fn === 'whereMonth') {
-                    $query->whereMonth($field, $operator, $value);
-                } elseif ($fn === 'whereYear') {
-                    $query->whereYear($field, $operator, $value);
-                } elseif ($fn === 'whereDate') {
-                    $query->whereDate($field, $operator, $value);
-                } elseif ($fn === 'whereBetween') {
-                    $query->whereBetween($field, $value);
-                }
-            }
-        }
 
         return $query->paginate(perPage: $itemsPerPage, page: $currentPage);
     }

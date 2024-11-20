@@ -30,7 +30,7 @@
             <q-item-label>{{item.quantity}}</q-item-label>
           </q-item-section>
           <q-item-section>
-            <q-item-label class="fw-bold">{{item.label}}</q-item-label>
+            <q-item-label class="fw-bold">{{item.name}}</q-item-label>
 <!--            <q-item-label caption class="font-size-10">{{item.description}}</q-item-label>-->
           </q-item-section>
           <q-item-section class="text-right">
@@ -65,7 +65,7 @@
         </q-item>
       </q-list>
     </q-scroll-area>
-    <div class="row bg-mor q-pa-md">
+    <div v-if="false" class="row bg-mor q-pa-md">
       <div class="col flex justify-between">
         <div class="text-white">#Cta: C2.14576</div>
         <div class="text-white">#Folio: F2.15683</div>
@@ -80,7 +80,7 @@
     <div class="row bg-dark q-pa-md border-babylon-top">
       <div class="col flex justify-between">
         <q-btn color="negative" label="Cancelar" @click="resetCart" class="fw-bold" />
-        <q-btn color="accent" text-color="dark" label="Confirmar" @click="handleConfirm" class="fw-bold" />
+        <q-btn color="accent" text-color="dark" label="Pagar" @click="handleConfirm" class="fw-bold" />
       </div>
     </div>
   </div>
