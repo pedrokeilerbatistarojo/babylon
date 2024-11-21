@@ -22,6 +22,7 @@
     "luxon": "^3.4.4",
     "pinia": "^2.0.11",
     "quasar": "^2.8.0",
+    "simple-keyboard": "^3.8.17",
     "vue": "^3.4.18",
     "vue-router": "^4.0.12"
   },

@@ -26,6 +26,7 @@
             class="q-mt-none q-mb-sm"
             v-model="loginData.username"
             type="text"
+            @focus="activeInput = 1"
             :rules="[val => !!val || 'Nombre de usuario es requerido']"
           />
 
@@ -36,6 +37,7 @@
             bg-color="white"
             class="q-mt-none q-mb-sm p-input"
             v-model="loginData.password"
+            @focus="activeInput = 2"
             :type="isPwd ? 'password' : 'text'"
             :rules="[val => !!val || 'Contraseña es requerido']"
           >
@@ -70,15 +72,23 @@
       </q-form>
     </div>
   </div>
+
+  <div class="q-pa-md">
+    <SimpleKeyboard
+      @onChange="onChange"
+      @onKeyPress="onKeyPress" />
+  </div>
 </template>
 
 <script setup>
-import { reactive, ref} from 'vue';
+import {reactive, ref, watch} from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import {useAuthStore} from "src/modules/Auth/stores/auth";
 import {useExchangeStore} from "src/modules/CashierRegister/stores/exchange";
+import SimpleKeyboard from "components/Form/SimpleKeyboard.vue";
+
 const $q = useQuasar();
 const router = useRouter();
 const route = useRoute();
@@ -86,6 +96,7 @@ const loginData = reactive({
   username: '',
   password: '',
 });
+const activeInput = ref(1);
 const loading = ref(false);
 const isPwd = ref(true);
 const { login } = useAuthStore();
@@ -133,6 +144,18 @@ const sendLogin = async () => {
       .finally(() => (loading.value = false));
   }
 };
+
+const onChange = (value) => {
+   if(activeInput.value === 1){
+     loginData.username = value;
+   }else if(activeInput.value === 2){
+    loginData.password = value;
+  }
+}
+
+watch(activeInput, (newVal) => {
+  console.log(newVal);
+})
 
 </script>
 
