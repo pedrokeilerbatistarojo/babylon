@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-scroll-area style="height: 250px; max-width: 100%;" ref="scrollAreaRef">
-      <q-list bordered separator ref="itemList" class="gradient-border">
+      <q-list bordered separator ref="itemList" style="background-color: #5f2ca8 ">
         <q-item class="bg-mor text-white fw-bold">
           <q-item-section>
             <div>CANT.</div>

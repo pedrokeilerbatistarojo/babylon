@@ -2,7 +2,7 @@
   <q-page class="bg-darkness q-pa-md">
     <div class="row q-col-gutter-md">
       <div class="col-12 col-sm-6">
-        <q-card class="shadow-10 bg-dark">
+        <q-card class="shadow-10 gradient-border">
           <q-tabs
             v-model="tabTicker"
             class="bg-mor text-white"
@@ -35,7 +35,7 @@
         </q-card>
       </div>
       <div class="col-12 col-sm-6">
-        <q-card class="shadow-10 bg-dark">
+        <q-card class="shadow-10 gradient-border">
           <q-tabs
             v-model="tabOrder"
             class="bg-mor text-white"
