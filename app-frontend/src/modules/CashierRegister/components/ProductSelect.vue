@@ -57,7 +57,9 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  fetchProducts();
+  if(products.value.length === 0){
+    fetchProducts();
+  }
 });
 
 const productList = computed(() => {
