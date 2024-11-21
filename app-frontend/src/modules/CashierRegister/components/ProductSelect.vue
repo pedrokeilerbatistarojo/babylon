@@ -7,7 +7,7 @@
         :key="product.id"
         @click="addProduct(product.id)"
       >
-        <div class="gradient-border div-product">
+        <div class="bg-mor div-product">
           <div class="row q-pa-md">
             <div class="col-6 col-sm-5 flex items-center">
               <img
