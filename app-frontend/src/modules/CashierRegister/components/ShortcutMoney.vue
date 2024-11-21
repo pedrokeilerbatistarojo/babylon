@@ -1,22 +1,26 @@
 <template>
-  <div class="q-gutter-sm row justify-around">
+  <div class="row justify-between">
     <q-btn
-      size="lg"
-      v-for="amount in amounts"
-      :key="amount"
-      :label="`$${amount}`"
-      color="accent"
+      v-for="(obj, index) in amounts"
+      :key="index"
+      :label="`${obj.currency} $ ${obj.amount}`"
+      color="info"
       text-color="dark"
       push
-      @click="emitAmount(amount)"
+      @click="emitAmount(obj.amount)"
     />
   </div>
 </template>
 
 <script setup>
-import { defineEmits } from 'vue';
+import {computed, defineEmits} from 'vue';
+import cashierService from "src/modules/CashierRegister/services/CashierService";
 
-const amounts = [100, 200, 500, 1000];
+const props = defineProps({
+  type: String
+});
+
+const amounts = computed(() => cashierService.getListShortcutAmounts(props.type));
 const emit = defineEmits(['amountSelected']);
 
 const emitAmount = (amount) => {

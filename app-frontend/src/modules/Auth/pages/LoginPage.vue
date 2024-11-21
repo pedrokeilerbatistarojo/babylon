@@ -2,7 +2,7 @@
   <div class="row items-start content-center justify-center login-wrapper bg-dark">
     <div
       style="border-radius: 20px;"
-      class="bg-mor login-card col-10 col-sm-6 col-md-4 col-lg-3 justify-center content-center q-pa-lg shadow-10"
+      class="bg-mor gradient-border login-card col-10 col-sm-6 col-md-4 col-lg-3 justify-center content-center q-pa-lg shadow-20"
     >
       <div class="flex justify-center q-mb-lg">
         <q-img
@@ -60,8 +60,12 @@
           >
           </q-btn>
         </div>
-        <div v-else class="q-pa-md">
-          <q-linear-progress track-color="accent" indeterminate></q-linear-progress>
+        <div v-else class="flex flex-center">
+          <q-spinner-dots
+            color="accent"
+            size="6em"
+          />
+          <q-tooltip :offset="[0, 8]">Cargando, espere por favor</q-tooltip>
         </div>
       </q-form>
     </div>
@@ -74,6 +78,7 @@ import { useQuasar } from 'quasar';
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import {useAuthStore} from "src/modules/Auth/stores/auth";
+import {useExchangeStore} from "src/modules/CashierRegister/stores/exchange";
 const $q = useQuasar();
 const router = useRouter();
 const route = useRoute();
@@ -86,7 +91,7 @@ const isPwd = ref(true);
 const { login } = useAuthStore();
 const { error } = storeToRefs(useAuthStore());
 
-//const backgroundImage = `url(${LoginBackground})`;
+const { fetchExchangeRate } = useExchangeStore();
 
 const sendLogin = async () => {
   loading.value = true;
@@ -119,6 +124,8 @@ const sendLogin = async () => {
         } else {
 
           let redirectPath = '/';
+
+          fetchExchangeRate();
 
           router.push({ path: redirectPath, hash: '#login' });
         }

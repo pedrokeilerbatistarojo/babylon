@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-scroll-area style="height: 250px; max-width: 100%;" ref="scrollAreaRef">
-      <q-list bordered separator>
+      <q-list bordered separator ref="itemList" class="gradient-border">
         <q-item class="bg-mor text-white fw-bold">
           <q-item-section>
             <div>CANT.</div>
@@ -23,7 +23,7 @@
           clickable
           v-ripple
           :active="index === activeIndex"
-          :class="{ 'bg-green-1': index === activeIndex }"
+          class="text-white"
           @click="activeIndex = index"
         >
           <q-item-section>
@@ -65,22 +65,35 @@
         </q-item>
       </q-list>
     </q-scroll-area>
-    <div v-if="false" class="row bg-mor q-pa-md">
-      <div class="col flex justify-between">
-        <div class="text-white">#Cta: C2.14576</div>
-        <div class="text-white">#Folio: F2.15683</div>
-      </div>
-    </div>
+<!--    <div class="row bg-mor q-pa-md">-->
+<!--      <div class="col flex justify-between">-->
+<!--        <div class="text-white">#Cta: C2.14576</div>-->
+<!--        <div class="text-white">#Folio: F2.15683</div>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="row bg-dark q-pa-md border-babylon-top">
       <div class="col flex justify-between">
         <div class="text-primary font-size-20 fw-bold">Total a pagar: </div>
         <div class="text-primary font-size-20 fw-bold">$ {{props.total}}</div>
       </div>
     </div>
-    <div class="row bg-dark q-pa-md border-babylon-top">
+    <div class="row bg-dark q-px-md q-pt-md border-babylon-top">
       <div class="col flex justify-between">
-        <q-btn color="negative" label="Cancelar" @click="resetCart" class="fw-bold" />
-        <q-btn color="accent" text-color="dark" label="Pagar" @click="handleConfirm" class="fw-bold" />
+        <q-btn color="negative" label="Limpiar" @click="resetCart" class="fw-bold" />
+        <q-btn :disable="!isValidCharge" color="accent" text-color="dark" label="Cobrar" @click="showPaymentMethod = true" class="fw-bold" />
+      </div>
+    </div>
+    <div v-if="showPaymentMethod" class="row bg-mor q-pa-md q-mt-md">
+      <div class="col flex justify-between">
+        <q-btn
+          v-for="(method, index) in paymentMethods"
+          :key="index"
+          color="accent"
+          text-color="dark"
+          class="fw-bold"
+          :label="method"
+          @click="handleConfirm(method)"
+        />
       </div>
     </div>
   </div>
@@ -88,7 +101,8 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {computed, ref} from "vue";
+import CashierService from "src/modules/CashierRegister/services/CashierService";
 
 const props = defineProps({
   items: Object,
@@ -101,28 +115,34 @@ const emit = defineEmits([
   'confirm'
 ]);
 
+const paymentMethods = computed(() => CashierService.getPaymentMethods());
+const isValidCharge = computed(() => props.total > 0);
+const itemList = ref(null);
+
 const loading = ref(false);
 const activeIndex = ref(0);
 const scrollAreaRef = ref(null);
-
+const showPaymentMethod = ref(false);
 
 const deleteItem = (index) => {
   emit('delete', index);
+  const childElementCount = itemList.value.$el.childElementCount;
+  if(childElementCount === 2){
+    showPaymentMethod.value = false;
+  }
+
 };
 
 const resetCart = () => {
   emit('reset');
+  showPaymentMethod.value = false;
 };
 
-const handleConfirm = () => {
-  emit('confirm');
+const handleConfirm = (method) => {
+  emit('confirm', method);
 }
 
 </script>
 
 <style scoped>
-.bg-green-1{
-  background-color: #9AFF6E;
-  color: #121212;
-}
 </style>

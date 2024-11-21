@@ -1,8 +1,8 @@
 <template>
-  <q-page class="bg-dark q-pa-md">
+  <q-page class="bg-darkness q-pa-md">
     <div class="row q-col-gutter-md">
       <div class="col-12 col-sm-6">
-        <q-card class="shadow-10">
+        <q-card class="shadow-10 bg-dark">
           <q-tabs
             v-model="tabTicker"
             class="bg-mor text-white"
@@ -19,13 +19,13 @@
 
           <q-tab-panels v-model="tabTicker" animated>
 
-            <q-tab-panel name="select">
+            <q-tab-panel name="select" class="bg-dark">
               <ProductSelect
                 @add-product="handleAddProduct"
               />
             </q-tab-panel>
 
-            <q-tab-panel name="courtesy">
+            <q-tab-panel name="courtesy" class="bg-dark">
               <ProductSelect
                 courtesy
                 @add-product="handleAddProduct"
@@ -35,7 +35,7 @@
         </q-card>
       </div>
       <div class="col-12 col-sm-6">
-        <q-card class="shadow-10">
+        <q-card class="shadow-10 bg-dark">
           <q-tabs
             v-model="tabOrder"
             class="bg-mor text-white"
@@ -52,7 +52,7 @@
 
           <q-tab-panels v-model="tabOrder" animated>
 
-            <q-tab-panel name="orders">
+            <q-tab-panel name="orders" class="bg-dark">
               <OrdersList
                 :items="cart"
                 :total="total"
@@ -62,7 +62,7 @@
               />
             </q-tab-panel>
 
-            <q-tab-panel name="last">
+            <q-tab-panel name="last" class="bg-dark">
               <div class="text-h6">Última cuenta</div>
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
             </q-tab-panel>
@@ -74,6 +74,7 @@
     <CashierPaymentDialog
       v-model="cashierPaymentDialogShow"
       :cart="cart"
+      :payment-method="paymentMethod"
       @success="handleCashierDialogSuccess"
       @cancel="handleCashierDialogCancel"
     />
@@ -90,7 +91,6 @@ import CartItem from "src/modules/CashierRegister/models/CartItem";
 import {storeToRefs} from "pinia";
 import {useProductStore} from "src/modules/CashierRegister/stores/product";
 import CashierPaymentDialog from "src/modules/CashierRegister/components/CashierPaymentDialog.vue";
-import TransferCashierDialog from "src/modules/Transfers/components/TransferCashierDialog.vue";
 import CashierService from "src/modules/CashierRegister/services/CashierService";
 
 defineOptions({
@@ -104,6 +104,7 @@ const tabTicker = ref('select');
 
 const cashierPaymentDialogShow = ref(false);
 const cart = ref([]);
+const paymentMethod = ref('');
 
 const total = computed(() => CashierService.getCashierCartTotal(cart.value));
 
@@ -135,12 +136,14 @@ const handleCashierDialogSuccess = () => {
   console.log('success');
 }
 
-const handlePaymentDialog = () => {
+const handlePaymentDialog = (method) => {
+  paymentMethod.value = method;
   cashierPaymentDialogShow.value = true;
 }
 
 const handleCashierDialogCancel = () => {
   cashierPaymentDialogShow.value = false;
+  paymentMethod.value = '';
 }
 
 </script>

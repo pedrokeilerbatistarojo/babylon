@@ -3,11 +3,11 @@
     <div v-if="!loading" class="row q-col-gutter-sm">
       <div
         v-for="product in productList"
-        class="col-6 col-sm-6"
+        class="col-6 col-sm-6 q-pa-sm"
         :key="product.id"
         @click="addProduct(product.id)"
       >
-        <div class="bg-mor div-product">
+        <div class="gradient-border div-product">
           <div class="row q-pa-md">
             <div class="col-6 col-sm-5 flex items-center">
               <img
@@ -86,7 +86,7 @@ const addProduct = (productId) => {
 
   .div-product :hover{
     border-radius: 4px;
-    background-color: #120533;
+    background-color: #5701D2;
     color: black;
     animation: wave 0.6s ease-in-out infinite;
   }

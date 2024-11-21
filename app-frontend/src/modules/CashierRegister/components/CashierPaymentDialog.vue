@@ -1,7 +1,7 @@
 <template>
   <q-dialog
   >
-    <q-card>
+    <q-card class="gradient-border shadow-10" style="width: 500px;">
       <q-card-section class="flex justify-between q-py-none bg-mor q-pa-md">
         <div class="text-h6 fw-bold text-accent">Pagar</div>
         <div>
@@ -14,10 +14,10 @@
           />
         </div>
       </q-card-section>
-      <q-separator />
-      <q-card-section class="q-pa-none">
+      <q-card-section class="q-pa-none bg-dark">
         <CashierPaymentForm
           :cart="props.cart"
+          :payment-method="props.paymentMethod"
           @success="$emit('success')"
           @cancel="$emit('cancel')"
         />
@@ -32,6 +32,7 @@ import CashierPaymentForm from "src/modules/CashierRegister/components/CashierPa
 
 const props = defineProps({
   cart: Object,
+  paymentMethod: String
 });
 
 const emit  = defineEmits([

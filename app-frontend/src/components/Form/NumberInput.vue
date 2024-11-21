@@ -5,7 +5,8 @@
     dense
     type="number"
     lazy-rules
-    step="any" />
+    step="any"
+  />
 </template>
 
 <script setup>
@@ -22,3 +23,18 @@ const textValue = computed({
   set: (value) => emit('update:modelValue', Number(value)),
 });
 </script>
+
+<style>
+.q-field--outlined .q-field__control::before {
+  border: 1px solid var(--q-accent)!important;
+}
+
+.custom-border .q-field {
+  border: 1px solid!important;
+  border-color: var(--q-accent)!important;
+}
+
+.custom-border .q-field--focused {
+  border-color: var(--q-accent)!important;
+}
+</style>

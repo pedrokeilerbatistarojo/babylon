@@ -18,6 +18,10 @@ body{
   background-color: $mor;
 }
 
+.bg-darkness{
+  background-color: $dark-page;
+}
+
 .q-drawer-bordered {
   border-right: 1px solid $border-color!important;
 }
@@ -59,4 +63,26 @@ body{
   font-size: 8px;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Desactiva las flechitas */
+  appearance: none;
+  margin: 0; /* Elimina posibles márgenes */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: none;  /* Chrome, Safari, Edge */
+  appearance: none;
+  color: $accent;
+}
+
+.q-tab-panels{
+  border-radius: 0!important;
+}
+
+.gradient-border{
+  background: linear-gradient(#251943, #251943) padding-box, linear-gradient(90.29deg, #8047D0 0.12%, #BA1AF7 48.91%, #9BFF6E 97.7%) border-box;
+  border: 2px solid transparent;
+}
 

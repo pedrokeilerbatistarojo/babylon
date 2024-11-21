@@ -1,97 +1,73 @@
 <template>
-  <div class="q-pa-lg">
-    <div class="font-size-16 text-uppercase fw-bold text-dark text-center q-mb-md">
-      Seleccionar método de pago
-    </div>
-    <div class="row items-start">
-      <div class="col q-pa-md text-center">
-        <q-img
-          alt="mxn Image"
-          src="~assets/payment-methods/mxn.png"
-          class="img-payment"
-          @click="handleSelectMethod('MXN')"
-        />
-        <span class="block q-mt-sm text-payment" @click="handleSelectMethod('mxn')">MXN </span>
-      </div>
-      <div class="col q-pa-md text-center">
-        <q-img
-          alt="usd Image"
-          src="~assets/payment-methods/usd.png"
-          class="img-payment"
-          @click="handleSelectMethod('USD')"
-        />
-        <span class="block q-mt-sm text-payment" @click="handleSelectMethod('usd')">USD</span>
-      </div>
-      <div class="col q-pa-md text-center">
-        <q-img
-          alt="debit Image"
-          src="~assets/payment-methods/debit.png"
-          class="img-payment"
-        />
-        <span class="block q-mt-sm text-payment">Tarjeta de débito</span>
-      </div>
-      <div class="col q-pa-md text-center">
-        <q-img
-          alt="credit Image"
-          src="~assets/payment-methods/credit-2.png"
-          class="img-payment"
-        />
-        <span class="block q-mt-sm text-payment">Tarjeta de crédito</span>
-      </div>
-    </div>
-    <div
-      v-if="methodVisibility"
-      class="row q-pt-md items-center justify-center"
-    >
-      <div class="col-12 flex justify-between">
-        <p class="font-size-16">Método de pago: </p>
-        <p class="fw-bold font-size-16">{{form.method}}</p>
-      </div>
+  <div class="q-px-lg q-py-sm">
+    <div class="row q-pt-md items-center justify-center text-accent">
       <div class="col-12 flex justify-between">
         <p class="font-size-16">A pagar: </p>
-        <p class="fw-bold font-size-16">$ {{total}}</p>
+        <p class="fw-bold font-size-16">MXN $ {{total}}</p>
       </div>
-      <div class="col-12 flex justify-between">
+<!--      <div v-if="form.method === `USD`" class="col-12 flex justify-between">-->
+<!--        <p class="font-size-16">Tasa de cambio: </p>-->
+<!--        <p class="fw-bold font-size-16">MXN $ {{exchangeRateMxn}}</p>-->
+<!--      </div>-->
+      <div v-if="form.method === `USD`" class="col-12 flex justify-between">
+        <p class="font-size-16">Referencia USD: </p>
+        <p class="fw-bold font-size-16">USD $ {{form.reference_usd}}</p>
+      </div>
+      <div v-if="form.method === `USD` || form.method === `MXN`" class="col-12 flex justify-between">
         <p class="font-size-16">Faltante: </p>
-        <p class="fw-bold font-size-16">$ {{form.missing}}</p>
+        <p class="fw-bold font-size-16">MXN $ {{form.missing}}</p>
+      </div>
+      <div v-if="form.method === `USD` || form.method === `MXN`" class="col-12 flex justify-between">
+        <p class="font-size-16">Cambio: </p>
+        <p class="fw-bold font-size-16">MXN $ {{form.return}}</p>
       </div>
       <div class="col-12 flex justify-between">
         <p class="font-size-16">Recibido:</p>
         <NumberInput
-          style="width: 160px"
+          style="width: 100px;"
           input-class="text-right fw-bold font-size-16"
+          text-color="accent"
+          color="accent"
           v-model="form.receive"
-          label="Monto Recibido"
-          :rules="[(val) => InputValidationService.required(val)]"
+          placeholder="Recibido"
           @update:modelValue="handleReceiveChange"
         />
       </div>
     </div>
-    <div
-      v-if="methodVisibility"
-      class="row q-pt-md items-center justify-center"
-    >
-      <ShortcutMoney @amount-selected="handleSelected" />
+    <div class="q-pt-lg">
+      <ShortcutMoney
+        :type="form.method"
+        @amount-selected="handleSelected"
+      />
     </div>
   </div>
   <div class="row q-mt-md bg-mor q-pa-md">
     <div class="col flex justify-between">
       <q-btn color="negative" label="Cancelar" @click="$emit('cancel')" class="fw-bold" />
-      <q-btn color="accent" :disabled="!isValidConfirm" text-color="dark" label="Confirmar Pago" @click="handleConfirm" class="fw-bold" />
+      <q-btn
+        class="fw-bold"
+        color="accent"
+        text-color="dark"
+        :loading="loading"
+        :disabled="!isValidConfirm"
+        label="Cobrar"
+        @click="handleConfirm" />
     </div>
   </div>
 </template>
 
 <script setup>
 
-import {computed, reactive, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 import CashierService from "src/modules/CashierRegister/services/CashierService";
 import NumberInput from "components/Form/NumberInput.vue";
-import InputValidationService from "src/services/InputValidationService";
 import ShortcutMoney from "src/modules/CashierRegister/components/ShortcutMoney.vue";
+import {useExchangeStore} from "src/modules/CashierRegister/stores/exchange";
+import {storeToRefs} from "pinia";
 
 const props = defineProps({
-  cart: Object
+  cart: Object,
+  paymentMethod: String
 });
 
 const emit  = defineEmits([
@@ -99,56 +75,96 @@ const emit  = defineEmits([
   'cancel',
 ]);
 
-const methodVisibility = ref(false);
 const isValidConfirm = ref(false);
 
+const { fetchExchangeRate } = useExchangeStore();
+const { exchange, loading } = storeToRefs(useExchangeStore());
+
 const total = computed(() => CashierService.getCashierCartTotal(props.cart));
+const exchangeRateMxn = computed(() => Math.round(exchange.value.conversion_rates.MXN));
 
 const form = reactive({
   missing: 0,
   receive: null,
   total: total.value,
-  method: null,
+  method: props.paymentMethod ?? null,
+  reference_usd: 0,
+  return: 0
 });
 
-const handleSelectMethod = (type) => {
-  form.method = type;
-  methodVisibility.value = true;
-}
-
-const handleReceiveChange = (value) => {
-  form.missing = total.value - value;
+const handleReceiveChange = (amount) => {
+  form.return = 0;
+  form.missing = 0;
+  calcChargeData(amount);
 }
 
 const handleSelected = (amount) => {
+  form.return = 0;
+  form.missing = 0;
   form.receive = amount;
-  form.missing = total.value - amount;
+  calcChargeData(amount);
 }
+
+onMounted(() => {
+  if(form.method === 'USD'){
+    if (exchange.value === null){
+      fetchExchangeRate().then(() => {
+        if (exchange.value !== null) {
+          calcExchangeRate(exchange.value);
+        }
+      }).catch(error => {
+        console.error('Error al obtener la tasa de cambio:', error);
+      });
+    }else{
+      calcExchangeRate(exchange.value);
+    }
+  }
+});
 
 watch(form, (newValue)=>{
   isValidConfirm.value = newValue.receive > 0;
+
+  if(newValue.method === 'USD'){
+    if (exchange.value !== null){
+      calcExchangeRate(exchange.value);
+    }
+  } else if(newValue.method === 'DEBIT' || newValue.method === 'CREDIT BANK'){
+    isValidConfirm.value = newValue.receive === total.value;
+  }
 }, {deep: true});
 
+watch(props, (newValue)=>{
+  if(newValue.paymentMethod === 'USD'){
+    if (exchange.value !== null){
+      calcExchangeRate(exchange.value);
+    }
+  }
+}, {deep: true});
+
+const calcExchangeRate = (exchange) => {
+  const conversion_rate = exchange.conversion_rates.MXN;
+  const converted = total.value / conversion_rate;
+  form.reference_usd = Math.round(converted);
+}
+
+const calcChargeData = (amount) => {
+  if(form.method === 'USD'){
+    form.receive = amount;
+    form.missing = form.reference_usd - amount;
+    form.missing *= exchangeRateMxn.value;
+    form.missing = Math.round(form.missing);
+  }else{
+    form.missing = total.value - amount;
+  }
+
+  if(form.missing < 0){
+    form.return = Math.abs(form.missing);
+    form.missing = 0;
+  }
+}
+
+const handleConfirm = () => {
+  console.log('Charge confirm');
+}
+
 </script>
-
-<style scoped>
-.img-payment{
-  cursor: pointer;
-  width: 40px;
-}
-
-.img-payment :hover{
-  cursor: pointer;
-  padding: 4px;
-}
-
-.text-payment{
-  cursor: pointer;
-}
-
-.text-payment :hover{
-  padding: 2px;
-  font-weight: bold!important;
-  font-size: 16px;
-}
-</style>
