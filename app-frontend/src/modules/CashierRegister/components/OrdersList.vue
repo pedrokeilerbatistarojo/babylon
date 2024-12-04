@@ -80,20 +80,7 @@
     <div class="row bg-dark q-px-md q-pt-md border-babylon-top">
       <div class="col flex justify-between">
         <q-btn color="negative" label="Limpiar" @click="resetCart" class="fw-bold" />
-        <q-btn :disable="!isValidCharge" color="accent" text-color="dark" label="Cobrar" @click="showPaymentMethod = true" class="fw-bold" />
-      </div>
-    </div>
-    <div v-if="showPaymentMethod" class="row bg-mor q-pa-md q-mt-md">
-      <div class="col flex justify-between">
-        <q-btn
-          v-for="(method, index) in paymentMethods"
-          :key="index"
-          color="accent"
-          text-color="dark"
-          class="fw-bold"
-          :label="method"
-          @click="handleConfirm(method)"
-        />
+        <q-btn :disable="!isValidCharge" color="accent" text-color="dark" label="Cobrar" @click="handleConfirm" class="fw-bold" />
       </div>
     </div>
   </div>
@@ -102,7 +89,6 @@
 <script setup>
 
 import {computed, ref} from "vue";
-import CashierService from "src/modules/CashierRegister/services/CashierService";
 
 const props = defineProps({
   items: Object,
@@ -115,7 +101,6 @@ const emit = defineEmits([
   'confirm'
 ]);
 
-const paymentMethods = computed(() => CashierService.getPaymentMethods());
 const isValidCharge = computed(() => props.total > 0);
 const itemList = ref(null);
 
@@ -138,8 +123,8 @@ const resetCart = () => {
   showPaymentMethod.value = false;
 };
 
-const handleConfirm = (method) => {
-  emit('confirm', method);
+const handleConfirm = () => {
+  emit('confirm');
 }
 
 </script>

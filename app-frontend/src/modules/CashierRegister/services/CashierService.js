@@ -53,6 +53,6 @@ export default {
     }
   },
   getPaymentMethods(){
-    return ['MXN', 'USD', 'DEBIT', 'CREDIT BANK'];
+    return ['EFECTIVO', 'TARJETA', 'TRANSFERENCIA'];
   }
 }

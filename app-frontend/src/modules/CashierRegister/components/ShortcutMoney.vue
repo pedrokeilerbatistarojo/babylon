@@ -1,15 +1,14 @@
 <template>
-  <div class="row justify-between">
-    <q-btn
-      v-for="(obj, index) in amounts"
-      :key="index"
-      :label="`${obj.currency} $ ${obj.amount}`"
-      color="info"
-      text-color="dark"
-      push
-      @click="emitAmount(obj.amount)"
-    />
-  </div>
+  <q-btn
+    class="full-width q-mb-sm"
+    v-for="(obj, index) in amounts"
+    :key="index"
+    :label="`${obj.currency} $ ${obj.amount}`"
+    color="info"
+    text-color="dark"
+    push
+    @click="emitAmount(obj.amount)"
+  />
 </template>
 
 <script setup>

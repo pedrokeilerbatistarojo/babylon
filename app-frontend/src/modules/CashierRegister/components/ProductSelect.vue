@@ -3,7 +3,7 @@
     <div v-if="!loading" class="row q-col-gutter-sm">
       <div
         v-for="product in productList"
-        class="col-6 col-sm-6 q-pa-sm"
+        class="col-6 col-sm-4 q-pa-sm flex flex-center"
         :key="product.id"
         @click="addProduct(product.id)"
       >

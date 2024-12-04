@@ -24,6 +24,8 @@ class ListProductUsecase implements UsecaseInterface
     {
         $result = $this->searchServiceResult($this->payload);
 
+        Product::query()->select('*')->get();
+
         return ProductResource::collection($result);
     }
 }
