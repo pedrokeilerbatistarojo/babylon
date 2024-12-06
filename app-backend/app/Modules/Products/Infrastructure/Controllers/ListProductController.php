@@ -7,6 +7,7 @@ use App\Modules\Shared\Domain\Dtos\SearchRequest;
 use App\Modules\Shared\Infrastructure\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Pedrokeilerbatistarojo\Smartfilter\Helpers\ResponseHelper;
 
 class ListProductController extends BaseController
 {
@@ -20,9 +21,12 @@ class ListProductController extends BaseController
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $input = $request->all();
-        $this->useCase->setPayload(new SearchRequest($input));
-
-        return $this->handleResponse($request, 'It has been search terminal successfully.');
+        try {
+            $response = $this->useCase->execute($request->all());
+            return ResponseHelper::sendResponse($response);
+        }
+        catch(\Exception $ex){
+            return ResponseHelper::sendError($ex->getMessage());
+        }
     }
 }

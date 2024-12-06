@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b4143ea7a82fa9da2bae24b32b7eba0",
+    "content-hash": "16604c3bea6361262f2447500d5c0cdc",
     "packages": [
         {
             "name": "brick/math",
@@ -2530,6 +2530,55 @@
                 }
             ],
             "time": "2024-10-15T16:15:16+00:00"
+        },
+        {
+            "name": "pedrokeilerbatistarojo/smartfilter",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pedrokeilerbatistarojo/smartfilter.git",
+                "reference": "4dda0b24b5c0d77db43e6df2b57e3497f705760a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pedrokeilerbatistarojo/smartfilter/zipball/4dda0b24b5c0d77db43e6df2b57e3497f705760a",
+                "reference": "4dda0b24b5c0d77db43e6df2b57e3497f705760a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^11.31",
+                "illuminate/database": "^11.31",
+                "illuminate/http": "^11.31",
+                "illuminate/pagination": "^11.31",
+                "php": "^8.2",
+                "symfony/http-foundation": "^7.0.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^9.6",
+                "phpunit/phpunit": "^11.0.1"
+            },
+            "type": "laravel-package",
+            "autoload": {
+                "psr-4": {
+                    "Pedrokeilerbatistarojo\\Smartfilter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pedro Keiler Batista Rojo",
+                    "email": "pedrokeilerbatistarojo@gmail.com"
+                }
+            ],
+            "description": "This Laravel package provides a streamlined solution for filtering and listing data. It accepts an input array, applies customizable filters, and returns a structured JSON response. Ideal for projects requiring dynamic data filtering with minimal setup, the package ensures consistency in API responses while maintaining flexibility to handle complex filter conditions.",
+            "support": {
+                "issues": "https://github.com/pedrokeilerbatistarojo/smartfilter/issues",
+                "source": "https://github.com/pedrokeilerbatistarojo/smartfilter/tree/v1.0.4"
+            },
+            "time": "2024-12-06T15:58:25+00:00"
         },
         {
             "name": "php-open-source-saver/jwt-auth",
@@ -8334,9 +8383,9 @@
     "platform": {
         "php": "^8.2",
         "ext-bcmath": "*",
+        "ext-curl": "*",
         "ext-pdo": "*",
-        "ext-sodium": "*",
-        "ext-curl": "*"
+        "ext-sodium": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"

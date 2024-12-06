@@ -4,27 +4,22 @@ namespace App\Modules\Products\Application\Usecases;
 
 use App\Modules\Products\Domain\Models\Product;
 use App\Modules\Products\Domain\Resources\ProductResource;
-use App\Modules\Shared\Application\Usecases\TraitHandleListPayload;
-use App\Modules\Shared\Application\Usecases\TraitSearchResult;
-use App\Modules\Shared\Application\Usecases\TraitUseFilter;
-use App\Modules\Shared\Contracts\UsecaseInterface;
-use App\Modules\Shared\Domain\Exceptions\ValidationException;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Pedrokeilerbatistarojo\Smartfilter\Services\FilterService;
 
-class ListProductUsecase implements UsecaseInterface
+readonly class ListProductUsecase
 {
-    use TraitHandleListPayload;
-    use TraitSearchResult;
-    use TraitUseFilter;
 
+    public function __construct(
+        private FilterService $filterService
+    ) {}
 
-    public function __construct(protected Product $entity) {}
-
-    public function execute(): AnonymousResourceCollection
+    /**
+     * @throws \Exception
+     */
+    public function execute(array $inputs): AnonymousResourceCollection
     {
-        $result = $this->searchServiceResult($this->payload);
-
-        Product::query()->select('*')->get();
+        $result = $this->filterService->execute(Product::class, $inputs);
 
         return ProductResource::collection($result);
     }
