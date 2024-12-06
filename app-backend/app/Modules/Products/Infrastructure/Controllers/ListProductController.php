@@ -3,7 +3,6 @@
 namespace App\Modules\Products\Infrastructure\Controllers;
 
 use App\Modules\Products\Application\Usecases\ListProductUsecase;
-use App\Modules\Shared\Domain\Dtos\SearchRequest;
 use App\Modules\Shared\Infrastructure\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
